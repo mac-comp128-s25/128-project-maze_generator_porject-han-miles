@@ -1,13 +1,7 @@
-import java.awt.Color;
-import java.util.HashMap;
-import java.util.Map;
-
 import edu.macalester.graphics.CanvasWindow;
-import edu.macalester.graphics.Ellipse;
-import edu.macalester.graphics.Line;
 
 public class Maze {
-    private CanvasWindow canvas;
+    private final CanvasWindow canvas;
     private static final int CANVAS_WIDTH = 800;
     private static final int CANVAS_HEIGHT = 600;
     private static final int NODE_RADIUS = 10;
