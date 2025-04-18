@@ -16,7 +16,7 @@ public class PrimsAlgorithmGenerator {
         }
     }
 
-    private void generateMaze() {
+    public void generateMaze() {
         List<Node> inside = new ArrayList<>();
         List<Node> outside = new ArrayList<>(nodes);
 
@@ -31,7 +31,7 @@ public class PrimsAlgorithmGenerator {
         }
     }
 
-    private void addRandomEdges(double probability) {
+    public void addRandomEdges(double probability) {
         for (Edge edge : edges) {
             Node nodeA = edge.nodeA;
             Node nodeB = edge.nodeB;
@@ -69,9 +69,15 @@ public class PrimsAlgorithmGenerator {
         return false;
     }
     
+    public List<Node> getNodes() {
+        return nodes;
+    }
 
+    public List<Edge> getEdges() {
+        return edges;
+    }
 
-    private static class Node {
+    public static class Node {
         int id;
         List<Node> neighbors;
 
@@ -81,7 +87,7 @@ public class PrimsAlgorithmGenerator {
         }
     }
 
-    private static class Edge {
+    public static class Edge {
         Node nodeA;
         Node nodeB;
 
