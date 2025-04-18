@@ -7,12 +7,16 @@ public class PrimsAlgorithmGenerator {
     private List<Node> nodes;
     private List<Edge> edges;
     private Random random;
-    public PrimsAlgorithmGenerator(int size){
+    private int gridSize;
+    public PrimsAlgorithmGenerator(int gridSize){
+        this.gridSize = gridSize;
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
         random = new Random();
-        for (int i =0; i<size; i++) {
-            nodes.add(new Node(i));
+        for (int row = 0; row < gridSize; row++) {
+            for (int col = 0; col < gridSize; col++) {
+                nodes.add(new Node(row, col));
+            }
         }
     }
 
@@ -25,38 +29,57 @@ public class PrimsAlgorithmGenerator {
 
         while (!outside.isEmpty()) {
             Node insideNode = inside.get(random.nextInt(inside.size()));
-            Node outsideNode = outside.remove(random.nextInt(outside.size()));
-            edges.add(new Edge(insideNode, outsideNode));
-            inside.add(outsideNode);
+            Node outsideNode = getRandomNeighbor(insideNode, outside);
+
+            if (outsideNode != null) {
+                edges.add(new Edge(insideNode, outsideNode));
+                inside.add(outsideNode);
+                outside.remove(outsideNode);
+            }
         }
+    }
+
+    private Node getRandomNeighbor(Node node, List<Node> outside) {
+        List<Node> neighbors = new ArrayList<>();
+        for (Node potentialNeighbor : outside) {
+            if (isNeighbor(node, potentialNeighbor)) {
+                neighbors.add(potentialNeighbor);
+            }
+        }
+        return neighbors.isEmpty() ? null : neighbors.get(random.nextInt(neighbors.size()));
+    }
+
+    private boolean isNeighbor(Node nodeA, Node nodeB) {
+        int rowDiff = Math.abs(nodeA.row - nodeB.row);
+        int colDiff = Math.abs(nodeA.col - nodeB.col);
+        return (rowDiff == 1 && colDiff == 0) || (rowDiff == 0 && colDiff == 1);
     }
 
     public void addRandomEdges(double probability) {
-        for (Edge edge : edges) {
-            Node nodeA = edge.nodeA;
-            Node nodeB = edge.nodeB;
-
-            List<Edge> potentialEdges = findUnconnectedEdges(nodeA, nodeB);
-
-            int edgesToAdd = random.nextInt(4); // 0 to 3
-            for (int i = 0; i < edgesToAdd && i < potentialEdges.size(); i++) {
-                if (random.nextDouble() < probability) {
-                    edges.add(potentialEdges.get(i));
+        for (Node node : nodes) {
+            for (Node neighbor : getPotentialNeighbors(node)) {
+                if (!areConnected(node, neighbor) && random.nextDouble() < probability) {
+                    edges.add(new Edge(node, neighbor));
                 }
             }
         }
     }
-
-    private List<Edge> findUnconnectedEdges(Node nodeA, Node nodeB) {
-        List<Edge> potentialEdges = new ArrayList<>();
-        for (Node neighborA : nodeA.neighbors) {
-            for (Node neighborB : nodeB.neighbors) {
-                if (!areConnected(neighborA, neighborB)) {
-                    potentialEdges.add(new Edge(neighborA, neighborB));
-                }
-            }
-        }
-        return potentialEdges;
+    
+    private List<Node> getPotentialNeighbors(Node node) {
+        List<Node> neighbors = new ArrayList<>();
+        int row = node.row;
+        int col = node.col;
+    
+        if (row > 0) neighbors.add(getNodeAt(row - 1, col)); // Up
+        if (row < gridSize - 1) neighbors.add(getNodeAt(row + 1, col)); // Down
+        if (col > 0) neighbors.add(getNodeAt(row, col - 1)); // Left
+        if (col < gridSize - 1) neighbors.add(getNodeAt(row, col + 1)); // Right
+    
+        return neighbors;
+    }
+    
+    private Node getNodeAt(int row, int col) {
+        return nodes.get(row * gridSize + col);
     }
 
     private boolean areConnected(Node nodeA, Node nodeB) {
@@ -78,12 +101,11 @@ public class PrimsAlgorithmGenerator {
     }
 
     public static class Node {
-        int id;
-        List<Node> neighbors;
+        int row, col;
 
-        Node(int id) {
-            this.id = id;
-            this.neighbors = new ArrayList<>();
+        Node(int row, int col) {
+            this.row = row;
+            this.col = col;
         }
     }
 

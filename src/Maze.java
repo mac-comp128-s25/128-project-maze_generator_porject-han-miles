@@ -13,19 +13,22 @@ public class Maze {
     private static final int NODE_RADIUS = 10;
     public Maze(){
         canvas = new CanvasWindow("Maze", 800, 600);
-        PrimsAlgorithmGenerator generator = new PrimsAlgorithmGenerator(20); 
+        int gridSize = 10;
+        PrimsAlgorithmGenerator generator = new PrimsAlgorithmGenerator(gridSize); 
         generator.generateMaze();
-        generator.addRandomEdges(0.5);
-        Map<PrimsAlgorithmGenerator.Node, double[]> nodePositions = generateNodePositions(generator);
+        generator.addRandomEdges(0.15);
+        Map<PrimsAlgorithmGenerator.Node, double[]> nodePositions = generateNodePositions(generator, gridSize);
         drawMaze(generator, nodePositions);
     }
 
-    private Map<PrimsAlgorithmGenerator.Node, double[]> generateNodePositions(PrimsAlgorithmGenerator generator) {
+    private Map<PrimsAlgorithmGenerator.Node, double[]> generateNodePositions(PrimsAlgorithmGenerator generator, int gridSize) {
         Map<PrimsAlgorithmGenerator.Node, double[]> positions = new HashMap<>();
-        int padding = 50;
+        double cellWidth = CANVAS_WIDTH / (double) gridSize;
+        double cellHeight = CANVAS_HEIGHT / (double) gridSize;
+
         for (PrimsAlgorithmGenerator.Node node : generator.getNodes()) {
-            double x = padding + Math.random() * (CANVAS_WIDTH - 2 * padding);
-            double y = padding + Math.random() * (CANVAS_HEIGHT - 2 * padding);
+            double x = node.col * cellWidth + cellWidth / 2;
+            double y = node.row * cellHeight + cellHeight / 2;
             positions.put(node, new double[]{x, y});
         }
         return positions;
