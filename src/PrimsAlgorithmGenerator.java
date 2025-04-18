@@ -11,10 +11,10 @@ import edu.macalester.graphics.Line;
 
 
 public class PrimsAlgorithmGenerator {
-    private List<Node> nodes;
-    private List<Edge> edges;
-    private Random random;
-    private int gridSize;
+    private final List<Node> nodes;
+    private final List<Edge> edges;
+    private final Random random;
+    private final int gridSize;
     public PrimsAlgorithmGenerator(int gridSize){
         this.gridSize = gridSize;
         nodes = new ArrayList<>();
