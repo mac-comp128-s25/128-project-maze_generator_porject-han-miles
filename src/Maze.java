@@ -7,6 +7,7 @@ public class Maze {
     private static final int NODE_RADIUS = 10;
     public Maze(){
         canvas = new CanvasWindow("Maze", 800, 600);
+        /* generate a maze using Prim's algorithm */
         int gridSize = 10;
         PrimsAlgorithmGenerator generator = new PrimsAlgorithmGenerator(gridSize); 
         generator.generateMaze();
