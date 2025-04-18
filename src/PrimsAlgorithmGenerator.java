@@ -1,6 +1,13 @@
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
+import edu.macalester.graphics.CanvasWindow;
+import edu.macalester.graphics.Ellipse;
+import edu.macalester.graphics.Line;
 
 
 public class PrimsAlgorithmGenerator {
@@ -90,6 +97,37 @@ public class PrimsAlgorithmGenerator {
             }
         }
         return false;
+    }
+
+    public Map<Node, double[]> generateNodePositions(int canvasWidth, int canvasHeight) {
+        Map<Node, double[]> positions = new HashMap<>();
+        double cellWidth = canvasWidth / (double) gridSize;
+        double cellHeight = canvasHeight / (double) gridSize;
+
+        for (Node node : nodes) {
+            double x = node.col * cellWidth + cellWidth / 2;
+            double y = node.row * cellHeight + cellHeight / 2;
+            positions.put(node, new double[]{x, y});
+        }
+        return positions;
+    }
+
+    public void drawMaze(CanvasWindow canvas, Map<Node, double[]> nodePositions, int nodeRadius) {
+        for (Edge edge : edges) {
+            double[] posA = nodePositions.get(edge.nodeA);
+            double[] posB = nodePositions.get(edge.nodeB);
+
+            Line line = new Line(posA[0], posA[1], posB[0], posB[1]);
+            line.setStrokeColor(Color.BLACK);
+            canvas.add(line);
+        }
+
+        for (Map.Entry<Node, double[]> entry : nodePositions.entrySet()) {
+            double[] pos = entry.getValue();
+            Ellipse circle = new Ellipse(pos[0] - nodeRadius, pos[1] - nodeRadius, nodeRadius * 2, nodeRadius * 2);
+            circle.setFillColor(Color.BLUE);
+            canvas.add(circle);
+        }
     }
     
     public List<Node> getNodes() {
