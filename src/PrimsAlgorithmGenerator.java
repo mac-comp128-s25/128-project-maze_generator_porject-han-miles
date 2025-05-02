@@ -171,10 +171,10 @@ public class PrimsAlgorithmGenerator {
         return (rowDiff == 1 && colDiff == 0) || (rowDiff == 0 && colDiff == 1);
     }
 
-    /**
-     * method to add random edges to the maze
-     * @param probability the probability of adding an edge
-     */
+    // /**
+    //  * method to add random edges to the maze
+    //  * @param probability the probability of adding an edge
+    //  */
     // public void addRandomEdges(double probability) {
     //     for (Node node : nodes) {
     //         for (Node neighbor : getPotentialNeighbors(node)) {
@@ -271,33 +271,70 @@ public class PrimsAlgorithmGenerator {
      * @param nodePositions the positions of the nodes
      * @param nodeRadius the radius of the nodes
      */
-    // public void drawMaze(CanvasWindow canvas, Map<Node, double[]> nodePositions, int nodeRadius) {
-    //     for (Edge edge : edges) {
-    //         double[] posA = nodePositions.get(edge.nodeA);
-    //         double[] posB = nodePositions.get(edge.nodeB);
+    // public void drawMaze(CanvasWindow canvas, int canvasWidth, int canvasHeight, double wallThickness) {
+    //     canvas.removeAll(); 
 
-    //         Line line = new Line(posA[0], posA[1], posB[0], posB[1]);
-    //         line.setStrokeColor(Color.BLACK);
-    //         canvas.add(line);
-    //     }
+    //     double cellWidth = canvasWidth / (double) gridSize;
+    //     double cellHeight = canvasHeight / (double) gridSize;
 
-    //     for (Map.Entry<Node, double[]> entry : nodePositions.entrySet()) {
-    //         double[] pos = entry.getValue();
-    //         Ellipse circle = new Ellipse(pos[0] - nodeRadius, pos[1] - nodeRadius, nodeRadius * 2, nodeRadius * 2);
-    //         circle.setFillColor(Color.BLUE);
-    //         canvas.add(circle);
-    //     }
+    //     for (int r = 0; r < gridSize; r++) {
+    //         for (int c = 0; c < gridSize; c++) {
+    //             Node currentNode = getNodeAt(r, c);
+    //             if (currentNode == null) continue; // Safety check
+
+    //             double cellX = c * cellWidth;
+    //             double cellY = r * cellHeight;
+
+    //             if (r < gridSize - 1) {
+    //                 Node downNode = getNodeAt(r + 1, c);
+    //                 if (downNode != null && !connections.contains(getConnectionKey(currentNode, downNode))) {
+    //                     Line wall = new Line(cellX, cellY + cellHeight, cellX + cellWidth, cellY + cellHeight);
+    //                     wall.setStrokeColor(Color.BLACK);
+    //                     wall.setStrokeWidth(wallThickness);
+    //                     canvas.add(wall);
+    //                 }
+    //             }
+
+    //             if (c < gridSize - 1) {
+    //                 Node rightNode = getNodeAt(r, c + 1);
+    //                  if (rightNode != null && !connections.contains(getConnectionKey(currentNode, rightNode))) {
+    //                     Line wall = new Line(cellX + cellWidth, cellY, cellX + cellWidth, cellY + cellHeight);
+    //                     wall.setStrokeColor(Color.BLACK);
+    //                     wall.setStrokeWidth(wallThickness);
+    //                     canvas.add(wall);
+    //                 }
+    //             }
+    //         }
+    //     }   
+    //     Line topWall = new Line(0, 0, canvasWidth-cellWidth, 0);
+    //     Line leftWall = new Line(0, 0, 0, canvasHeight-cellHeight);
+    //     Line bottomWall = new Line(cellWidth, canvasHeight, canvasWidth, canvasHeight);
+    //     Line rightWall = new Line(canvasWidth, cellHeight, canvasWidth, canvasHeight);
+
+    //     topWall.setStrokeColor(Color.BLACK);
+    //     leftWall.setStrokeColor(Color.BLACK);
+    //     bottomWall.setStrokeColor(Color.BLACK);
+    //     rightWall.setStrokeColor(Color.BLACK);
+
+    //     topWall.setStrokeWidth(wallThickness);
+    //     leftWall.setStrokeWidth(wallThickness);
+    //     bottomWall.setStrokeWidth(wallThickness);
+    //     rightWall.setStrokeWidth(wallThickness);
+
+    //     canvas.add(topWall);
+    //     canvas.add(leftWall);
+    //     canvas.add(bottomWall);
+    //     canvas.add(rightWall);
     // }
-    public void drawMaze(CanvasWindow canvas, int canvasWidth, int canvasHeight, double wallThickness) {
-        canvas.removeAll(); 
-
+    public List<Line> generateMazeLines(int canvasWidth, int canvasHeight, double wallThickness) {
+        List<Line> lines = new ArrayList<>();
         double cellWidth = canvasWidth / (double) gridSize;
         double cellHeight = canvasHeight / (double) gridSize;
 
         for (int r = 0; r < gridSize; r++) {
             for (int c = 0; c < gridSize; c++) {
                 Node currentNode = getNodeAt(r, c);
-                if (currentNode == null) continue; // Safety check
+                if (currentNode == null) continue; 
 
                 double cellX = c * cellWidth;
                 double cellY = r * cellHeight;
@@ -308,7 +345,7 @@ public class PrimsAlgorithmGenerator {
                         Line wall = new Line(cellX, cellY + cellHeight, cellX + cellWidth, cellY + cellHeight);
                         wall.setStrokeColor(Color.BLACK);
                         wall.setStrokeWidth(wallThickness);
-                        canvas.add(wall);
+                        lines.add(wall);
                     }
                 }
 
@@ -318,7 +355,7 @@ public class PrimsAlgorithmGenerator {
                         Line wall = new Line(cellX + cellWidth, cellY, cellX + cellWidth, cellY + cellHeight);
                         wall.setStrokeColor(Color.BLACK);
                         wall.setStrokeWidth(wallThickness);
-                        canvas.add(wall);
+                        lines.add(wall);
                     }
                 }
             }
@@ -338,10 +375,19 @@ public class PrimsAlgorithmGenerator {
         bottomWall.setStrokeWidth(wallThickness);
         rightWall.setStrokeWidth(wallThickness);
 
-        canvas.add(topWall);
-        canvas.add(leftWall);
-        canvas.add(bottomWall);
-        canvas.add(rightWall);
+        lines.add(topWall);
+        lines.add(leftWall);
+        lines.add(bottomWall);
+        lines.add(rightWall);
+
+        return lines;
+
+    }
+    
+    public void drawMaze(CanvasWindow canvas, List<Line> lines, int canvasWidth, int canvasHeight, double wallThickness) {
+        for (Line line : lines) {
+            canvas.add(line);
+        }
     }
 
 
