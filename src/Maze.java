@@ -39,10 +39,16 @@ public class Maze {
     
     public Maze(){
         canvas = new CanvasWindow("Maze", 800, 600);
-        /* generate a maze using Prim's algorithm */
-        PrimsAlgorithmGenerator generator = new PrimsAlgorithmGenerator(GRID_SIZE); 
+        // /* generate a maze using Prim's algorithm */
+        // PrimsAlgorithmGenerator generator = new PrimsAlgorithmGenerator(GRID_SIZE); 
+        // generator.generateMaze();
+        // // generator.addRandomEdges(0.20);
+        // walls = generator.generateMazeLines(CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
+        // generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
+        
+        /* generate a maze using Wilson's algorithm */
+        WilsonsAlgorithmGenerator generator = new WilsonsAlgorithmGenerator(GRID_SIZE); 
         generator.generateMaze();
-        // generator.addRandomEdges(0.20);
         walls = generator.generateMazeLines(CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
         generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
         
