@@ -32,17 +32,17 @@ public class RecursiveBacktrackingAlgorithmGenerator {
         directions.add("E");
         directions.add("W");
         // nodes.get(random.nextInt(size));
-        north = new boolean[size][size];
-        south = new boolean[size][size];
-        east = new boolean[size][size];
-        west = new boolean[size][size];
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                nodes.add(new Node(row, col));
-                north[row][col] = true; // set up grid of boxes 
-                south[row][col] = true;
-                east[row][col] = true;
-                west[row][col] = true;
+        north = new boolean[size + 1][size + 1];
+        south = new boolean[size + 1][size + 1];
+        east = new boolean[size + 1][size + 1];
+        west = new boolean[size + 1][size + 1];
+        for (int x = 1; x < size; x++) {
+            for (int y = 1; y < size; y++) {
+                nodes.add(new Node(x, y));
+                north[x][y] = true; // set up grid of boxes 
+                south[x][y] = true;
+                east[x][y] = true;
+                west[x][y] = true;
 
             }
         }
@@ -51,48 +51,61 @@ public class RecursiveBacktrackingAlgorithmGenerator {
 
     public void generateMaze(Node nodeStart){
         Collections.shuffle(directions); // randomizes directions for each node
+        System.out.println(directions);
         Node nodeChecking = null;
         for (int i = 0; i < directions.size(); i++){ // checks each direction for availablity
             if (directions.get(i) == "N"){
-                if (insideBounds(nodeStart.row, nodeStart.col - 1)) { // if it is in bounds
-                    nodeChecking = getNode(nodeStart.row, nodeStart.col - 1);
+                if (insideBounds(nodeStart.x, nodeStart.y + 1)) { // if it is in bounds
+                    nodeChecking = getNode(nodeStart.x, nodeStart.y + 1);
                     if (!nodeChecking.marked){ // if not allready marked
-                        north[nodeStart.row][nodeStart.col] = false; // remove the wall in the direction moved
+                        north[nodeStart.x][nodeStart.y] = false; // remove the wall in the direction moved
                         edges.add(new Edge(nodeStart,nodeChecking)); // create edge between nodes
-                        nodeChecking.marked = true;
+                        nodeStart.marked = true;
+                        System.out.println("got here __North!__");
+                        System.out.println(nodeChecking.x);
+                        System.out.println(nodeChecking.y);
                         generateMaze(nodeChecking);
                     } 
                 }
             }
             else if (directions.get(i) == "S"){
-                if (insideBounds(nodeStart.row, nodeStart.col + 1)) {
-                    nodeChecking = getNode(nodeStart.row, nodeStart.col + 1);
+                if (insideBounds(nodeStart.x, nodeStart.y - 1)) {
+                    nodeChecking = getNode(nodeStart.x, nodeStart.y - 1);
                     if (!nodeChecking.marked){
-                        south[nodeStart.row][nodeStart.col] = false; // remove the wall in the direction moved
+                        south[nodeStart.x][nodeStart.y] = false; // remove the wall in the direction moved
                         edges.add(new Edge(nodeStart,nodeChecking)); // create edge between nodes
-                        nodeChecking.marked = true;
+                        nodeStart.marked = true;
+                        System.out.println("got here __South!__");
+                        System.out.println(nodeChecking.x);
+                        System.out.println(nodeChecking.y);
                         generateMaze(nodeChecking);
                     }
                 }
             }
             else if (directions.get(i) == "E"){
-                if (insideBounds(nodeStart.row + 1, nodeStart.col)) {
-                    nodeChecking = getNode(nodeStart.row + 1, nodeStart.col);
+                if (insideBounds(nodeStart.x + 1, nodeStart.y)) {
+                    nodeChecking = getNode(nodeStart.x + 1, nodeStart.y);
                     if (!nodeChecking.marked){
-                        east[nodeStart.row][nodeStart.col] = false; // remove the wall in the direction moved
+                        east[nodeStart.x][nodeStart.y] = false; // remove the wall in the direction moved
                         edges.add(new Edge(nodeStart,nodeChecking)); // create edge between nodes
-                        nodeChecking.marked = true;
+                        nodeStart.marked = true;
+                        System.out.println("got here __East!__");
+                        System.out.println(nodeChecking.x);
+                        System.out.println(nodeChecking.y);
                         generateMaze(nodeChecking);
                     }
                 }
             }
             else if (directions.get(i) == "W"){
-                if (insideBounds(nodeStart.row - 1, nodeStart.col)) {
-                    nodeChecking = getNode(nodeStart.row - 1, nodeStart.col);
+                if (insideBounds(nodeStart.x - 1, nodeStart.y)) {
+                    nodeChecking = getNode(nodeStart.x - 1, nodeStart.y);
                     if (!nodeChecking.marked){
-                        west[nodeStart.row][nodeStart.col] = false; // remove the wall in the direction moved
+                        west[nodeStart.x][nodeStart.y] = false; // remove the wall in the direction moved
                         edges.add(new Edge(nodeStart,nodeChecking)); // create edge between nodes
-                        nodeChecking.marked = true;
+                        nodeStart.marked = true;
+                        System.out.println("got here __West!__");
+                        System.out.println(nodeChecking.x);
+                        System.out.println(nodeChecking.y);
                         generateMaze(nodeChecking);
                     }
                 }
@@ -103,7 +116,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
     public void drawMaze(CanvasWindow canvas, int nodeRadius){
         this.canvas = canvas;
         for (int x = 1; x <= size; x++) {
-            for (int y = 1; y <= size; y++) {
+            for (int y = 0; y <= size; y++) {
                 if (south[x][y]) {
                     Line l = new Line(scaleX(x), scaleY(y), scaleX(x + 1), scaleY(y));
                     l.setStrokeColor(Color.BLACK);
@@ -133,7 +146,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
     }
 
     private boolean insideBounds(int x, int y){
-        return (!(x == 0 || x == size + 1 || y == 0 || y == size + 1));
+        return (!(x < 1 || x > size + 1 || y < 0 || y > size + 1));
     }
 
     /**
@@ -146,12 +159,12 @@ public class RecursiveBacktrackingAlgorithmGenerator {
 
     /**
      * method to get a node at a specific position
-     * @param row the row of the node
-     * @param col the column of the node
+     * @param x the x of the node
+     * @param y the y of the node
      * @return the node at the specified position
      */
-    public Node getNode(int row, int col){
-        return nodes.get(row * size + col);
+    public Node getNode(int x, int y){
+        return nodes.get(x + y * size);
     }
 
     public Node getRandomNode(){
@@ -168,15 +181,15 @@ public class RecursiveBacktrackingAlgorithmGenerator {
 
     /**
      * class representing a node in the maze
-     * each node has a row and column position
+     * each node has a x and yumn position
      */
     public static class Node {
-        int row, col;
+        int x, y;
         boolean marked;
 
-        Node(int row, int col) {
-            this.row = row;
-            this.col = col;
+        Node(int x, int y) {
+            this.x = y;
+            this.x = y;
             this.marked = false;
         }
     }
