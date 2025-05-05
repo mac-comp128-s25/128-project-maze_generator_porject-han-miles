@@ -8,6 +8,7 @@ import edu.macalester.graphics.FontStyle;
 import edu.macalester.graphics.GraphicsText;
 import edu.macalester.graphics.Line;
 import edu.macalester.graphics.Point;
+import edu.macalester.graphics.Polygon;
 import edu.macalester.graphics.events.KeyboardEvent;
 import edu.macalester.graphics.ui.Button;
 
@@ -45,7 +46,7 @@ public class Maze {
         // // generator.addRandomEdges(0.20);
         // walls = generator.generateMazeLines(CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
         // generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
-        
+
         /* generate a maze using Wilson's algorithm */
         WilsonsAlgorithmGenerator generator = new WilsonsAlgorithmGenerator(GRID_SIZE); 
         generator.generateMaze();
@@ -77,6 +78,7 @@ public class Maze {
         startButton.onClick(() -> startGame());
         canvas.onKeyDown(this::handleKeyPress);
         canvas.animate(this::updateGame);
+        drawEndFlag();
     }
 
     // private List<Line> findWallsOnCanvas(CanvasWindow targetCanvas) {
@@ -155,6 +157,23 @@ public class Maze {
             }
             messageRemoveTime = -1; 
         }
+        if (player.getCenter().getX() < 0) {
+            playerDX = 0;
+            playerDY = 0;
+        }
+        if (player.getCenter().getX() > CANVAS_WIDTH) {
+            playerDX = 0;
+            playerDY = 0;
+        }
+        if (player.getCenter().getY() < 0) {
+            playerDX = 0;
+            playerDY = 0;
+        }
+        if (player.getCenter().getY() > CANVAS_HEIGHT) {
+            playerDX = 0;
+            playerDY = 0;
+        }
+
 
         Point currentCenter = player.getCenter();
         double nextX = currentCenter.getX() + playerDX;
@@ -238,7 +257,28 @@ public class Maze {
     canvas.remove(player);
 }
 
+private void drawEndFlag() {
+    double poleX = endCellCenter.getX();
+    double poleBottomY = endCellCenter.getY() + cellHeight * 0.4; 
+    double poleTopY = endCellCenter.getY() - cellHeight * 0.4; 
+    double flagWidth = cellWidth * 0.4;
+    double flagHeight = cellHeight * 0.3;
 
+    Line pole = new Line(poleX, poleBottomY, poleX, poleTopY);
+    pole.setStrokeColor(Color.BLACK);
+    pole.setStrokeWidth(2); 
+    canvas.add(pole);
+
+    List<Point> flagPoints = List.of(
+        new Point(poleX, poleTopY),                      
+        new Point(poleX + flagWidth, poleTopY + flagHeight / 2.0),
+        new Point(poleX, poleTopY + flagHeight)        
+    );
+    Polygon flagBody = new Polygon(flagPoints);
+    flagBody.setFillColor(Color.RED);
+    flagBody.setStroked(false); 
+    canvas.add(flagBody);
+}
 
 
     
