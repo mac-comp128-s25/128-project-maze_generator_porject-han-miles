@@ -40,18 +40,18 @@ public class Maze {
     
     public Maze(){
         canvas = new CanvasWindow("Maze", 800, 600);
-        // /* generate a maze using Prim's algorithm */
-        // PrimsAlgorithmGenerator generator = new PrimsAlgorithmGenerator(GRID_SIZE); 
-        // generator.generateMaze();
-        // // generator.addRandomEdges(0.20);
-        // walls = generator.generateMazeLines(CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
-        // generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
-
-        /* generate a maze using Wilson's algorithm */
-        WilsonsAlgorithmGenerator generator = new WilsonsAlgorithmGenerator(GRID_SIZE); 
+        /* generate a maze using Prim's algorithm */
+        PrimsAlgorithmGenerator generator = new PrimsAlgorithmGenerator(GRID_SIZE); 
         generator.generateMaze();
+        // generator.addRandomEdges(0.20);
         walls = generator.generateMazeLines(CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
         generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
+
+        // /* generate a maze using Wilson's algorithm */
+        // WilsonsAlgorithmGenerator generator = new WilsonsAlgorithmGenerator(GRID_SIZE); 
+        // generator.generateMaze();
+        // walls = generator.generateMazeLines(CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
+        // generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
         
         startCellCenter = new Point(
             cellWidth * 0.5,
@@ -194,7 +194,7 @@ public class Maze {
             //      canvas.remove(messageText);
             //  }
         }
-        if (player.getCenter().distance(endCellCenter) < WALL_THICKNESS/3.0) {
+        if (player.getCenter().distance(endCellCenter) < WALL_THICKNESS/2.0) {
             winGame();
         }
     }
@@ -224,7 +224,7 @@ public class Maze {
         double closestY = y1 + t * dy;
     
         double distanceSquared = (closestX - cx) * (closestX - cx) + (closestY - cy) * (closestY - cy);
-        return distanceSquared <= radius * radius;
+        return distanceSquared <= 3*radius/2 * 3*radius/2;
     }
 
 
