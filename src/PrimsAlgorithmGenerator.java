@@ -32,7 +32,12 @@ public class PrimsAlgorithmGenerator {
         }
     }
 
-    // Helper method to create a unique key for a connection between two nodes
+    /**
+     * Helper method to create a unique key for a connection between two nodes
+     * @param nodeA the first node
+     * @param nodeB the second node
+     * @return a unique key for the connection
+     */
     private String getConnectionKey(Node nodeA, Node nodeB) {
         int indexA = nodeA.row * gridSize + nodeA.col;
         int indexB = nodeB.row * gridSize + nodeB.col;
@@ -43,7 +48,9 @@ public class PrimsAlgorithmGenerator {
         }
     }
 
-    // Helper method to build the connections set after edges are generated
+    /**
+     * Helper method to build the connections set after edges are generated
+     */
     private void buildConnectionsSet() {
         connections.clear(); 
         for (Edge edge : edges) {
@@ -94,6 +101,9 @@ public class PrimsAlgorithmGenerator {
     /**
      * Finds potential edges connecting the given node to nodes in the outside list
      * and adds them to the potentialEdges list.
+     * @param node the node to check for potential edges
+     * @param outside the list of nodes outside the current maze
+     * @param potentialEdges the list to add potential edges to
      */
     private void findPotentialEdges(Node node, List<Node> outside, List<Edge> potentialEdges) {
         for (Node potentialNeighbor : outside) {
@@ -181,7 +191,8 @@ public class PrimsAlgorithmGenerator {
      * method to generate the lines of maze
      * @param canvasWidth the width of canvas to draw on
      * @param canvasHeight the height of canvas to draw on
-     * @param wallThickness the radius of the nodes
+     * @param wallThickness The desired stroke width for the wall lines.
+     * @return A List of Line objects representing the maze walls.
      */
     public List<Line> generateMazeLines(int canvasWidth, int canvasHeight, double wallThickness) {
         List<Line> lines = new ArrayList<>();
@@ -241,6 +252,14 @@ public class PrimsAlgorithmGenerator {
 
     }
     
+    /**
+     * method to draw the maze on the canvas
+     * @param canvas the canvas to draw on
+     * @param lines the lines of the maze
+     * @param canvasWidth the width of canvas to draw on
+     * @param canvasHeight the height of canvas to draw on
+     * @param wallThickness The desired stroke width for the wall lines.
+     */
     public void drawMaze(CanvasWindow canvas, List<Line> lines, int canvasWidth, int canvasHeight, double wallThickness) {
         for (Line line : lines) {
             canvas.add(line);

@@ -28,6 +28,10 @@ public class WilsonsAlgorithmGenerator {
         initializeGrid();
     }
 
+    /**
+     * Initializes the grid with Cell objects.
+     * Each cell is represented by a Cell object with its row and column indices.
+     */
     private void initializeGrid() {
         for (int r = 0; r < gridSize; r++) {
             for (int c = 0; c < gridSize; c++) {
@@ -36,24 +40,11 @@ public class WilsonsAlgorithmGenerator {
         }
     }
 
-    // public Cell[][] generateMaze() {
-    //     int startR = random.nextInt(gridSize);
-    //     int startC = random.nextInt(gridSize);
-    //     grid[startR][startC].visited = true;
-    //     remainingCells--;
 
-    //     while (remainingCells > 0) {
-    //         Cell currentWalkStartCell = chooseUnvisitedCell();
-    //         if (currentWalkStartCell == null) break; 
-
-    //         List<Cell> path = performLoopErasedRandomWalk(currentWalkStartCell);
-
-    //         carvePath(path);
-    //     }
-    //     return grid;
-    // }
-
-    // Helper to find the first unvisited cell (left-to-right, top-to-bottom)
+    /**
+     * Helper to find the first unvisited cell (left-to-right, top-to-bottom)
+     * @return the first unvisited cell
+     */ 
     private Cell chooseUnvisitedCell() {
         for (int r = 0; r < gridSize; r++) {
             for (int c = 0; c < gridSize; c++) {
@@ -64,7 +55,14 @@ public class WilsonsAlgorithmGenerator {
         }
         return null; 
     }
-
+    
+    /**
+     * Generates a maze using Wilson's algorithm.
+     * The algorithm starts from a random cell and performs loop-erased random walks
+     * until all cells are visited.
+     *
+     * @return A 2D array of Cell objects representing the generated maze.
+     */
     public Cell[][] generateMaze() {
         if (gridSize == 0) return grid; 
         int startR = random.nextInt(gridSize);
@@ -88,6 +86,14 @@ public class WilsonsAlgorithmGenerator {
     }
 
 
+    /**
+     * Performs a loop-erased random walk starting from the given cell.
+     * The walk continues until it either returns to a visited cell or
+     * reaches a dead end. The path is then returned as a list of cells.
+     *
+     * @param startCell The starting cell for the random walk.
+     * @return A list of cells representing the path of the random walk.
+     */
     private List<Cell> performLoopErasedRandomWalk(Cell startCell) {
         List<Cell> currentPath = new ArrayList<>();
         Map<Cell, Integer> pathIndices = new HashMap<>(); 
@@ -122,6 +128,13 @@ public class WilsonsAlgorithmGenerator {
     }
 
 
+    /**
+     * Carves the path through the maze by removing walls between adjacent cells.
+     * The path is represented as a list of cells, and the walls are removed
+     * between each pair of adjacent cells in the path.
+     *
+     * @param fullPathIncludingHitCell The list of cells representing the path.
+     */
     private void carvePath(List<Cell> fullPathIncludingHitCell) {
         if (fullPathIncludingHitCell.size() < 2) {
              if (!fullPathIncludingHitCell.isEmpty()) {
@@ -156,7 +169,11 @@ public class WilsonsAlgorithmGenerator {
         }
     }
 
-    // Helper to get valid directions (staying within bounds)
+    /**
+     * Helper to get valid directions (staying within bounds)
+     * @param cell The cell to check for valid directions.
+     * @return A list of valid directions from the given cell.
+     */
     private List<Direction> getValidDirections(Cell cell) {
         List<Direction> directions = new ArrayList<>(4);
         if (cell.row > 0) directions.add(Direction.NORTH);
@@ -166,6 +183,12 @@ public class WilsonsAlgorithmGenerator {
         return directions;
     }
 
+    /**
+     * Helper to get the neighbor cell in a given direction.
+     * @param cell The cell to check for neighbors.
+     * @param dir The direction to check.
+     * @return The neighboring cell in the specified direction, or null if out of bounds.
+     */
     private Cell getNeighbor(Cell cell, Direction dir) {
         int nr = cell.row + dir.dr;
         int nc = cell.col + dir.dc;
@@ -175,6 +198,12 @@ public class WilsonsAlgorithmGenerator {
         return null;
     }
 
+    /**
+     * Helper to get the direction between two cells.
+     * @param c1 The first cell.
+     * @param c2 The second cell.
+     * @return The direction from c1 to c2, or null if they are the same cell.
+     */
     private Direction getDirection(Cell c1, Cell c2) {
         if (c2.row < c1.row) return Direction.NORTH;
         if (c2.row > c1.row) return Direction.SOUTH;
@@ -183,7 +212,11 @@ public class WilsonsAlgorithmGenerator {
         return null; 
     }
 
-    // Helper to remove the wall between two adjacent cells
+    /**
+     * Helper to remove the wall between two adjacent cells.
+     * @param c1
+     * @param c2
+     */
     private void removeWall(Cell c1, Cell c2) {
         if (c1 == null || c2 == null) return;
 
@@ -284,10 +317,10 @@ public class WilsonsAlgorithmGenerator {
 
 
 
-
-
-
-
+    /**
+     * Cell class representing a cell in the maze grid.
+     * Each cell has a row and column index, wall flags, and a visited status.
+     */
     public static class Cell {
         final int row;
         final int col;
@@ -319,6 +352,10 @@ public class WilsonsAlgorithmGenerator {
         }
     }
 
+    /**
+     * Enum representing the four possible directions (N, S, E, W) in the maze.
+     * Each direction has a change in row and column associated with it.
+     */
     enum Direction {
         NORTH(-1, 0),
         SOUTH(1, 0),
