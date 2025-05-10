@@ -1,3 +1,4 @@
+package generators;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -158,7 +159,7 @@ public class PrimsAlgorithmGenerator {
      * @param node the node to get neighbors for
      * @return a list of potential neighbors
      */
-    private List<Node> getPotentialNeighbors(Node node) {
+    public List<Node> getPotentialNeighbors(Node node) {
         List<Node> neighbors = new ArrayList<>();
         int row = node.row;
         int col = node.col;
@@ -290,7 +291,8 @@ public class PrimsAlgorithmGenerator {
      * each node has a row and column position
      */
     public static class Node {
-        int row, col;
+        public int row;
+        public int col;
 
         Node(int row, int col) {
             this.row = row;
@@ -303,8 +305,8 @@ public class PrimsAlgorithmGenerator {
      * each node has a row and column position
      */
     public static class Edge {
-        Node nodeA;
-        Node nodeB;
+        public Node nodeA;
+        public Node nodeB;
 
         Edge(Node nodeA, Node nodeB) {
             this.nodeA = nodeA;

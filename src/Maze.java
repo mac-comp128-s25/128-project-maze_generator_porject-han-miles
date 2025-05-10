@@ -11,6 +11,7 @@ import edu.macalester.graphics.Point;
 import edu.macalester.graphics.Polygon;
 import edu.macalester.graphics.events.KeyboardEvent;
 import edu.macalester.graphics.ui.Button;
+import generators.PrimsAlgorithmGenerator;
 
 public class Maze {
     private final CanvasWindow canvas;
