@@ -12,6 +12,7 @@ import edu.macalester.graphics.Polygon;
 import edu.macalester.graphics.events.KeyboardEvent;
 import edu.macalester.graphics.ui.Button;
 import generators.PrimsAlgorithmGenerator;
+import generators.WilsonsAlgorithmGenerator;
 
 public class Maze {
     private final CanvasWindow canvas;
@@ -42,17 +43,17 @@ public class Maze {
     public Maze(){
         canvas = new CanvasWindow("Maze", 800, 600);
         /* generate a maze using Prim's algorithm */
-        PrimsAlgorithmGenerator generator = new PrimsAlgorithmGenerator(GRID_SIZE); 
-        generator.generateMaze();
-        // generator.addRandomEdges(0.20);
-        walls = generator.generateMazeLines(CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
-        generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
-
-        // /* generate a maze using Wilson's algorithm */
-        // WilsonsAlgorithmGenerator generator = new WilsonsAlgorithmGenerator(GRID_SIZE); 
+        // PrimsAlgorithmGenerator generator = new PrimsAlgorithmGenerator(GRID_SIZE); 
         // generator.generateMaze();
+        // // generator.addRandomEdges(0.20);
         // walls = generator.generateMazeLines(CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
         // generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
+
+        /* generate a maze using Wilson's algorithm */
+        WilsonsAlgorithmGenerator generator = new WilsonsAlgorithmGenerator(GRID_SIZE); 
+        generator.generateMaze();
+        walls = generator.generateMazeLines(CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
+        generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
         
         startCellCenter = new Point(
             cellWidth * 0.5,

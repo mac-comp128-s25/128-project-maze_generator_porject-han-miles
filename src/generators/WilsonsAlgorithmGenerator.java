@@ -1,3 +1,4 @@
+package generators;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,9 +13,9 @@ import edu.macalester.graphics.Line;
 
 
 public class WilsonsAlgorithmGenerator {
-    private final Cell[][] grid;
-    private final int gridSize;
-    private int remainingCells;
+    final Cell[][] grid;
+    final int gridSize;
+    int remainingCells;
     private final Random random = new Random();
 
     /**
@@ -356,7 +357,7 @@ public class WilsonsAlgorithmGenerator {
      * Enum representing the four possible directions (N, S, E, W) in the maze.
      * Each direction has a change in row and column associated with it.
      */
-    enum Direction {
+    public enum Direction {
         NORTH(-1, 0),
         SOUTH(1, 0),
         EAST(0, 1),
