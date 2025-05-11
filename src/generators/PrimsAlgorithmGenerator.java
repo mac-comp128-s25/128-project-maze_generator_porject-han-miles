@@ -1,3 +1,4 @@
+package generators;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,7 +33,12 @@ public class PrimsAlgorithmGenerator {
         }
     }
 
-    // Helper method to create a unique key for a connection between two nodes
+    /**
+     * Helper method to create a unique key for a connection between two nodes
+     * @param nodeA the first node
+     * @param nodeB the second node
+     * @return a unique key for the connection
+     */
     private String getConnectionKey(Node nodeA, Node nodeB) {
         int indexA = nodeA.row * gridSize + nodeA.col;
         int indexB = nodeB.row * gridSize + nodeB.col;
@@ -43,7 +49,9 @@ public class PrimsAlgorithmGenerator {
         }
     }
 
-    // Helper method to build the connections set after edges are generated
+    /**
+     * Helper method to build the connections set after edges are generated
+     */
     private void buildConnectionsSet() {
         connections.clear(); 
         for (Edge edge : edges) {
@@ -94,6 +102,9 @@ public class PrimsAlgorithmGenerator {
     /**
      * Finds potential edges connecting the given node to nodes in the outside list
      * and adds them to the potentialEdges list.
+     * @param node the node to check for potential edges
+     * @param outside the list of nodes outside the current maze
+     * @param potentialEdges the list to add potential edges to
      */
     private void findPotentialEdges(Node node, List<Node> outside, List<Edge> potentialEdges) {
         for (Node potentialNeighbor : outside) {
@@ -114,51 +125,6 @@ public class PrimsAlgorithmGenerator {
     }
 
 
-
-    // /**
-    // * method to generate a maze using Prim's algorithm with a random starting point
-    // */
-    // public void generateMaze() {
-    //     List<Node> inside = new ArrayList<>();
-    //     List<Node> outside = new ArrayList<>(nodes);
-
-    //     Node startNode = outside.remove(random.nextInt(outside.size()));
-    //     inside.add(startNode);
-
-    //     while (!outside.isEmpty()) {
-    //         Node insideNode = inside.get(random.nextInt(inside.size()));
-    //         Node outsideNode = getRandomNeighbor(insideNode, outside);
-
-    //         if (outsideNode != null) {
-    //             edges.add(new Edge(insideNode, outsideNode));
-    //             inside.add(outsideNode);
-    //             outside.remove(outsideNode);
-    //         }
-    //     }
-    // }
-    
-    
-    
-
-    // /**
-    //  * method to get a random neighbor of a node from the outside list
-    //  * @param node the node to get a neighbor for
-    //  * @param outside the list of nodes outside the maze
-    //  * @return a random neighbor node or null if no neighbors are found
-    //  */
-    // private Node getRandomNeighbor(Node node, List<Node> outside) {
-    //     List<Node> neighbors = new ArrayList<>();
-    //     for (Node potentialNeighbor : outside) {
-    //         if (isNeighbor(node, potentialNeighbor)) {
-    //             neighbors.add(potentialNeighbor);
-    //         }
-    //     }
-    //     if (neighbors.isEmpty()) {
-    //         return null;
-    //     }
-    //     return neighbors.get(random.nextInt(neighbors.size()));
-    // }
-
     /**
      * method to check if two nodes are neighbors
      * @param nodeA the first node
@@ -171,19 +137,10 @@ public class PrimsAlgorithmGenerator {
         return (rowDiff == 1 && colDiff == 0) || (rowDiff == 0 && colDiff == 1);
     }
 
-    // /**
-    //  * method to add random edges to the maze
-    //  * @param probability the probability of adding an edge
-    //  */
-    // public void addRandomEdges(double probability) {
-    //     for (Node node : nodes) {
-    //         for (Node neighbor : getPotentialNeighbors(node)) {
-    //             if (!areConnected(node, neighbor) && random.nextDouble() < probability) {
-    //                 edges.add(new Edge(node, neighbor));
-    //             }
-    //         }
-    //     }
-    // }
+    /**
+     * method to add random edges to the maze
+     * @param probability the probability of adding an edge
+     */
     public void addRandomEdges(double probability) {
         int addedCount = 0;
         for (Node node : nodes) {
@@ -202,7 +159,7 @@ public class PrimsAlgorithmGenerator {
      * @param node the node to get neighbors for
      * @return a list of potential neighbors
      */
-    private List<Node> getPotentialNeighbors(Node node) {
+    public List<Node> getPotentialNeighbors(Node node) {
         List<Node> neighbors = new ArrayList<>();
         int row = node.row;
         int col = node.col;
@@ -229,103 +186,15 @@ public class PrimsAlgorithmGenerator {
         return null;
     }
 
-    // /**
-    //  * method to check if two nodes are connected
-    //  * @param nodeA the first node
-    //  * @param nodeB the second node
-    //  * @return true if they are connected, false otherwise
-    //  */
-    // private boolean areConnected(Node nodeA, Node nodeB) {
-    //     for (Edge edge : edges) {
-    //         if ((edge.nodeA == nodeA && edge.nodeB == nodeB) ||
-    //             (edge.nodeA == nodeB && edge.nodeB == nodeA)) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    // /**
-    //  * method to generate node positions for drawing
-    //  * @param canvasWidth the width of the canvas
-    //  * @param canvasHeight the height of the canvas
-    //  * @return a map of nodes to their positions
-    //  */
-    // public Map<Node, double[]> generateNodePositions(int canvasWidth, int canvasHeight) {
-    //     Map<Node, double[]> positions = new HashMap<>();
-    //     double cellWidth = canvasWidth / (double) gridSize;
-    //     double cellHeight = canvasHeight / (double) gridSize;
-
-    //     for (Node node : nodes) {
-    //         double x = node.col * cellWidth + cellWidth / 2;
-    //         double y = node.row * cellHeight + cellHeight / 2;
-    //         positions.put(node, new double[]{x, y});
-    //     }
-    //     return positions;
-    // }
 
 
     /**
-     * method to draw the maze on a canvas
-     * @param canvas the canvas to draw on
-     * @param nodePositions the positions of the nodes
-     * @param nodeRadius the radius of the nodes
+     * method to generate the lines of maze
+     * @param canvasWidth the width of canvas to draw on
+     * @param canvasHeight the height of canvas to draw on
+     * @param wallThickness The desired stroke width for the wall lines.
+     * @return A List of Line objects representing the maze walls.
      */
-    // public void drawMaze(CanvasWindow canvas, int canvasWidth, int canvasHeight, double wallThickness) {
-    //     canvas.removeAll(); 
-
-    //     double cellWidth = canvasWidth / (double) gridSize;
-    //     double cellHeight = canvasHeight / (double) gridSize;
-
-    //     for (int r = 0; r < gridSize; r++) {
-    //         for (int c = 0; c < gridSize; c++) {
-    //             Node currentNode = getNodeAt(r, c);
-    //             if (currentNode == null) continue; // Safety check
-
-    //             double cellX = c * cellWidth;
-    //             double cellY = r * cellHeight;
-
-    //             if (r < gridSize - 1) {
-    //                 Node downNode = getNodeAt(r + 1, c);
-    //                 if (downNode != null && !connections.contains(getConnectionKey(currentNode, downNode))) {
-    //                     Line wall = new Line(cellX, cellY + cellHeight, cellX + cellWidth, cellY + cellHeight);
-    //                     wall.setStrokeColor(Color.BLACK);
-    //                     wall.setStrokeWidth(wallThickness);
-    //                     canvas.add(wall);
-    //                 }
-    //             }
-
-    //             if (c < gridSize - 1) {
-    //                 Node rightNode = getNodeAt(r, c + 1);
-    //                  if (rightNode != null && !connections.contains(getConnectionKey(currentNode, rightNode))) {
-    //                     Line wall = new Line(cellX + cellWidth, cellY, cellX + cellWidth, cellY + cellHeight);
-    //                     wall.setStrokeColor(Color.BLACK);
-    //                     wall.setStrokeWidth(wallThickness);
-    //                     canvas.add(wall);
-    //                 }
-    //             }
-    //         }
-    //     }   
-    //     Line topWall = new Line(0, 0, canvasWidth-cellWidth, 0);
-    //     Line leftWall = new Line(0, 0, 0, canvasHeight-cellHeight);
-    //     Line bottomWall = new Line(cellWidth, canvasHeight, canvasWidth, canvasHeight);
-    //     Line rightWall = new Line(canvasWidth, cellHeight, canvasWidth, canvasHeight);
-
-    //     topWall.setStrokeColor(Color.BLACK);
-    //     leftWall.setStrokeColor(Color.BLACK);
-    //     bottomWall.setStrokeColor(Color.BLACK);
-    //     rightWall.setStrokeColor(Color.BLACK);
-
-    //     topWall.setStrokeWidth(wallThickness);
-    //     leftWall.setStrokeWidth(wallThickness);
-    //     bottomWall.setStrokeWidth(wallThickness);
-    //     rightWall.setStrokeWidth(wallThickness);
-
-    //     canvas.add(topWall);
-    //     canvas.add(leftWall);
-    //     canvas.add(bottomWall);
-    //     canvas.add(rightWall);
-    // }
     public List<Line> generateMazeLines(int canvasWidth, int canvasHeight, double wallThickness) {
         List<Line> lines = new ArrayList<>();
         double cellWidth = canvasWidth / (double) gridSize;
@@ -384,6 +253,14 @@ public class PrimsAlgorithmGenerator {
 
     }
     
+    /**
+     * method to draw the maze on the canvas
+     * @param canvas the canvas to draw on
+     * @param lines the lines of the maze
+     * @param canvasWidth the width of canvas to draw on
+     * @param canvasHeight the height of canvas to draw on
+     * @param wallThickness The desired stroke width for the wall lines.
+     */
     public void drawMaze(CanvasWindow canvas, List<Line> lines, int canvasWidth, int canvasHeight, double wallThickness) {
         for (Line line : lines) {
             canvas.add(line);
@@ -414,7 +291,8 @@ public class PrimsAlgorithmGenerator {
      * each node has a row and column position
      */
     public static class Node {
-        int row, col;
+        public int row;
+        public int col;
 
         Node(int row, int col) {
             this.row = row;
@@ -427,25 +305,12 @@ public class PrimsAlgorithmGenerator {
      * each node has a row and column position
      */
     public static class Edge {
-        Node nodeA;
-        Node nodeB;
+        public Node nodeA;
+        public Node nodeB;
 
         Edge(Node nodeA, Node nodeB) {
             this.nodeA = nodeA;
             this.nodeB = nodeB;
         }
     }
-    // /**
-    //  * Inner class to represent a wall
-    //  */
-    // private static class Wall {
-    //     int row1, col1, row2, col2;
-    
-    //     Wall(int row1, int col1, int row2, int col2) {
-    //         this.row1 = row1;
-    //         this.col1 = col1;
-    //         this.row2 = row2;
-    //         this.col2 = col2;
-    //     }
-    // }
 }
