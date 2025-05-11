@@ -17,6 +17,7 @@ import generators.WilsonsAlgorithmGenerator.Cell;
 import generators.WilsonsAlgorithmGenerator.Direction; 
 import edu.macalester.graphics.Line; 
 
+//The loopErasedRandomWalkReachesVisitedCell test can't be run individually.
 public class WilsonsAlgorithmGeneratorTest {
 
     private WilsonsAlgorithmGenerator generator;
@@ -152,6 +153,7 @@ public class WilsonsAlgorithmGeneratorTest {
 
     @Test
     void loopErasedRandomWalkReachesVisitedCell() {
+        // Will have errors if run the test individually since some necessary set up are outside this test.
         WilsonsAlgorithmGenerator gen = new WilsonsAlgorithmGenerator(2);
         gen.grid[0][0].visited = true; 
         gen.remainingCells--;
