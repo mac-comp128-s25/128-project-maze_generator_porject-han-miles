@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Random;
 
 import edu.macalester.graphics.CanvasWindow;
+import edu.macalester.graphics.Ellipse;
+
 import java.awt.Color;
 import edu.macalester.graphics.Line;
 
@@ -19,6 +21,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
     private boolean[][] south;
     private boolean[][] west;
     private CanvasWindow canvas;
+    private ArrayList <Line> lines;
 
     public RecursiveBacktrackingAlgorithmGenerator(int size){
         this.size = size;
@@ -27,6 +30,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
         edges = new ArrayList<>();
         random = new Random();
         directions = new ArrayList<>();
+        lines = new ArrayList<>();
         directions.add("N");
         directions.add("S");
         directions.add("E");
@@ -36,13 +40,13 @@ public class RecursiveBacktrackingAlgorithmGenerator {
         south = new boolean[size + 1][size + 1];
         east = new boolean[size + 1][size + 1];
         west = new boolean[size + 1][size + 1];
-        for (int x = 1; x < size; x++) {
-            for (int y = 1; y < size; y++) {
-                nodes.add(new Node(x, y));
-                north[x][y] = true; // set up grid of boxes 
-                south[x][y] = true;
-                east[x][y] = true;
-                west[x][y] = true;
+        for (int yPos = 0; yPos < size; yPos++) {
+            for (int xPos = 0; xPos < size; xPos++) {
+                nodes.add(new Node(xPos, yPos));
+                north[xPos][yPos] = true; // set up grid of boxes 
+                south[xPos][yPos] = true;
+                east[xPos][yPos] = true;
+                west[xPos][yPos] = true;
 
             }
         }
@@ -59,11 +63,14 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                     nodeChecking = getNode(nodeStart.x, nodeStart.y + 1);
                     if (!nodeChecking.marked){ // if not allready marked
                         north[nodeStart.x][nodeStart.y] = false; // remove the wall in the direction moved
+                        south[nodeStart.x][nodeStart.y + 1] = false; // remove for ajacent node to prevent gap being drawn over
                         edges.add(new Edge(nodeStart,nodeChecking)); // create edge between nodes
                         nodeStart.marked = true;
                         System.out.println("got here __North!__");
-                        System.out.println(nodeChecking.x);
-                        System.out.println(nodeChecking.y);
+                        System.out.println("X:");
+                        System.out.println(nodeStart.x);
+                        System.out.println("Y:");
+                        System.out.println(nodeStart.y);
                         generateMaze(nodeChecking);
                     } 
                 }
@@ -73,11 +80,14 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                     nodeChecking = getNode(nodeStart.x, nodeStart.y - 1);
                     if (!nodeChecking.marked){
                         south[nodeStart.x][nodeStart.y] = false; // remove the wall in the direction moved
+                        north[nodeStart.x][nodeStart.y - 1] = false;
                         edges.add(new Edge(nodeStart,nodeChecking)); // create edge between nodes
                         nodeStart.marked = true;
                         System.out.println("got here __South!__");
-                        System.out.println(nodeChecking.x);
-                        System.out.println(nodeChecking.y);
+                        System.out.println("X:");
+                        System.out.println(nodeStart.x);
+                        System.out.println("Y:");
+                        System.out.println(nodeStart.y);
                         generateMaze(nodeChecking);
                     }
                 }
@@ -87,11 +97,14 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                     nodeChecking = getNode(nodeStart.x + 1, nodeStart.y);
                     if (!nodeChecking.marked){
                         east[nodeStart.x][nodeStart.y] = false; // remove the wall in the direction moved
+                        west[nodeStart.x + 1][nodeStart.y] = false;
                         edges.add(new Edge(nodeStart,nodeChecking)); // create edge between nodes
                         nodeStart.marked = true;
                         System.out.println("got here __East!__");
-                        System.out.println(nodeChecking.x);
-                        System.out.println(nodeChecking.y);
+                        System.out.println("X:");
+                        System.out.println(nodeStart.x);
+                        System.out.println("Y:");
+                        System.out.println(nodeStart.y);
                         generateMaze(nodeChecking);
                     }
                 }
@@ -101,11 +114,14 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                     nodeChecking = getNode(nodeStart.x - 1, nodeStart.y);
                     if (!nodeChecking.marked){
                         west[nodeStart.x][nodeStart.y] = false; // remove the wall in the direction moved
+                        east[nodeStart.x - 1][nodeStart.y] = false;
                         edges.add(new Edge(nodeStart,nodeChecking)); // create edge between nodes
                         nodeStart.marked = true;
                         System.out.println("got here __West!__");
-                        System.out.println(nodeChecking.x);
-                        System.out.println(nodeChecking.y);
+                        System.out.println("X:");
+                        System.out.println(nodeStart.x);
+                        System.out.println("Y:");
+                        System.out.println(nodeStart.y);
                         generateMaze(nodeChecking);
                     }
                 }
@@ -113,40 +129,51 @@ public class RecursiveBacktrackingAlgorithmGenerator {
         }
     }
 
-    public void drawMaze(CanvasWindow canvas, int nodeRadius){
+    public ArrayList<Line> drawMaze(CanvasWindow canvas, int nodeRadius){
         this.canvas = canvas;
         for (int x = 1; x <= size; x++) {
-            for (int y = 0; y <= size; y++) {
+            for (int y = 1; y <= size; y++) {
+                int xPos = x + 1;
+                int yPos = y + 1;
                 if (south[x][y]) {
                     Line l = new Line(scaleX(x), scaleY(y), scaleX(x + 1), scaleY(y));
                     l.setStrokeColor(Color.BLACK);
                     l.setStroked(true);
+                    l.setStrokeWidth(30);
                     canvas.add(l);
+                    lines.add(l);
                 }
                 if (north[x][y]) { 
                     Line l = new Line(scaleX(x), scaleY(y + 1), scaleX(x + 1), scaleY(y + 1));
                     l.setStrokeColor(Color.BLACK);
                     l.setStroked(true);
+                    l.setStrokeWidth(30);
                     canvas.add(l);
+                    lines.add(l);
                 }
                 if (west[x][y]) {
                     Line l = new Line(scaleX(x), scaleY(y), scaleX(x), scaleY(y + 1));
                     l.setStrokeColor(Color.BLACK);
                     l.setStroked(true);
+                    l.setStrokeWidth(30);
                     canvas.add(l);
+                    lines.add(l);
                 }
                 if (east[x][y]) {
                     Line l = new Line(scaleX(x + 1), scaleY(y), scaleX(x + 1), scaleY(y + 1));
                     l.setStrokeColor(Color.BLACK);
                     l.setStroked(true);
+                    l.setStrokeWidth(30);
                     canvas.add(l);
+                    lines.add(l);
                 }
             }
         }
+        return lines;
     }
 
     private boolean insideBounds(int x, int y){
-        return (!(x < 1 || x > size + 1 || y < 0 || y > size + 1));
+        return (!(x <= 0 || x >= size || y <= 0 || y >= size));
     }
 
     /**
@@ -164,11 +191,11 @@ public class RecursiveBacktrackingAlgorithmGenerator {
      * @return the node at the specified position
      */
     public Node getNode(int x, int y){
-        return nodes.get(x + y * size);
+        return nodes.get((x) + (size * (y)));
     }
 
     public Node getRandomNode(){
-        return nodes.get(random.nextInt(size));
+        return nodes.get(random.nextInt(size * size));
     }
 
     /**
@@ -188,8 +215,8 @@ public class RecursiveBacktrackingAlgorithmGenerator {
         boolean marked;
 
         Node(int x, int y) {
-            this.x = y;
-            this.x = y;
+            this.x = x;
+            this.y = y;
             this.marked = false;
         }
     }

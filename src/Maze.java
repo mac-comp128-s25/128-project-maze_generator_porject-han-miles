@@ -42,6 +42,11 @@ public class Maze {
         /* generate a maze using Prim's algorithm */
         PrimsAlgorithmGenerator generator = new PrimsAlgorithmGenerator(GRID_SIZE); 
         generator.generateMaze();
+
+        // RecursiveBacktrackingAlgorithmGenerator rbgen = new RecursiveBacktrackingAlgorithmGenerator(GRID_SIZE);
+        // rbgen.generateMaze(rbgen.getRandomNode());
+        // rbgen.drawMaze(canvas, 0);
+
         // generator.addRandomEdges(0.20);
         walls = generator.generateMazeLines(CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
         generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
