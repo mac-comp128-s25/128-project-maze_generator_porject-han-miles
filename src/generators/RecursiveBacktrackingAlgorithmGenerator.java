@@ -1,3 +1,4 @@
+package generators;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +23,8 @@ public class RecursiveBacktrackingAlgorithmGenerator {
     private boolean[][] west;
     private CanvasWindow canvas;
     private ArrayList <Line> lines;
+    // int repeated = 0;
+    Node startNode;
 
     public RecursiveBacktrackingAlgorithmGenerator(int size){
         this.size = size;
@@ -54,9 +57,14 @@ public class RecursiveBacktrackingAlgorithmGenerator {
     }
 
     public void generateMaze(Node nodeStart){
+        if (nodeStart == null){
+            nodeStart = nodes.get(0);
+        }
         Collections.shuffle(directions); // randomizes directions for each node
         System.out.println(directions);
         Node nodeChecking = null;
+        nodeStart.marked = true;
+
         for (int i = 0; i < directions.size(); i++){ // checks each direction for availablity
             if (directions.get(i) == "N"){
                 if (insideBounds(nodeStart.x, nodeStart.y + 1)) { // if it is in bounds
@@ -65,7 +73,6 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                         north[nodeStart.x][nodeStart.y] = false; // remove the wall in the direction moved
                         south[nodeStart.x][nodeStart.y + 1] = false; // remove for ajacent node to prevent gap being drawn over
                         edges.add(new Edge(nodeStart,nodeChecking)); // create edge between nodes
-                        nodeStart.marked = true;
                         System.out.println("got here __North!__");
                         System.out.println("X:");
                         System.out.println(nodeStart.x);
@@ -82,7 +89,6 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                         south[nodeStart.x][nodeStart.y] = false; // remove the wall in the direction moved
                         north[nodeStart.x][nodeStart.y - 1] = false;
                         edges.add(new Edge(nodeStart,nodeChecking)); // create edge between nodes
-                        nodeStart.marked = true;
                         System.out.println("got here __South!__");
                         System.out.println("X:");
                         System.out.println(nodeStart.x);
@@ -99,7 +105,6 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                         east[nodeStart.x][nodeStart.y] = false; // remove the wall in the direction moved
                         west[nodeStart.x + 1][nodeStart.y] = false;
                         edges.add(new Edge(nodeStart,nodeChecking)); // create edge between nodes
-                        nodeStart.marked = true;
                         System.out.println("got here __East!__");
                         System.out.println("X:");
                         System.out.println(nodeStart.x);
@@ -116,7 +121,6 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                         west[nodeStart.x][nodeStart.y] = false; // remove the wall in the direction moved
                         east[nodeStart.x - 1][nodeStart.y] = false;
                         edges.add(new Edge(nodeStart,nodeChecking)); // create edge between nodes
-                        nodeStart.marked = true;
                         System.out.println("got here __West!__");
                         System.out.println("X:");
                         System.out.println(nodeStart.x);
@@ -131,10 +135,20 @@ public class RecursiveBacktrackingAlgorithmGenerator {
 
     public ArrayList<Line> drawMaze(CanvasWindow canvas, int nodeRadius){
         this.canvas = canvas;
-        for (int x = 1; x <= size; x++) {
-            for (int y = 1; y <= size; y++) {
-                int xPos = x + 1;
-                int yPos = y + 1;
+
+        // Ellipse n = new Ellipse(scaleX(startNode.x - 0.55), scaleY(startNode.y - 0.45), 20, 20); // nodes
+        // n.setFillColor(Color.RED);
+        // n.setFilled(true);
+        // canvas.add(n);
+
+        for (int x = 0; x <= size; x++) {
+            for (int y = 0; y <= size; y++) {
+                /* draw nodes */
+                // Ellipse s = new Ellipse(scaleX(x - 0.55), scaleY(y - 0.45), 10, 10);
+                //     s.setFillColor(Color.green);
+                //     s.setFilled(true);
+                //     canvas.add(s);
+
                 if (south[x][y]) {
                     Line l = new Line(scaleX(x), scaleY(y), scaleX(x + 1), scaleY(y));
                     l.setStrokeColor(Color.BLACK);
@@ -169,11 +183,24 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                 }
             }
         }
+        /* show path of nodes */
+        // for (Edge edge : edges){
+        //     double sX = scaleX(edge.nodeA.x + .5);
+        // double sY = scaleY(edge.nodeA.y + .5);
+        // double fX = scaleX(edge.nodeB.x + .5);
+        // double fY = scaleY(edge.nodeB.y + .5);
+        // Line l = new Line(sX,sY,fX,fY);
+        // l.setStrokeColor(Color.RED);
+        // l.setStroked(true);
+        // l.setStrokeWidth(5);
+        // canvas.add(l);
+        // }
         return lines;
     }
+        
 
     private boolean insideBounds(int x, int y){
-        return (!(x <= 0 || x >= size || y <= 0 || y >= size));
+        return (!(x < 0 || x >= size || y < 0 || y >= size));
     }
 
     /**
@@ -195,7 +222,16 @@ public class RecursiveBacktrackingAlgorithmGenerator {
     }
 
     public Node getRandomNode(){
-        return nodes.get(random.nextInt(size * size));
+        Node randNode = nodes.get(random.nextInt((size) * (size)));
+        if (randNode.x == 0){
+            randNode = getNode(randNode.x+1, randNode.y);
+        }
+        if (randNode.y == 0){
+            randNode = getNode(randNode.x, randNode.y+1);
+        }
+        startNode = randNode;
+        return randNode;
+        
     }
 
     /**
@@ -234,7 +270,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
             this.nodeB = nodeB;
         }
     }
-    private double scaleX(double x) { return canvas.getWidth()  * (x) / (size+2); }
-    private double scaleY(double y) { return canvas.getHeight() * ((size+2) - y) / (size+2); }
+    private double scaleX(double x) { return canvas.getWidth()  * (x) / (size); }
+    private double scaleY(double y) { return canvas.getHeight() * ((size) - (y)) / (size) ; }
     
 }

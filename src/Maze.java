@@ -12,6 +12,7 @@ import edu.macalester.graphics.Polygon;
 import edu.macalester.graphics.events.KeyboardEvent;
 import edu.macalester.graphics.ui.Button;
 import generators.PrimsAlgorithmGenerator;
+import generators.RecursiveBacktrackingAlgorithmGenerator;
 import generators.WilsonsAlgorithmGenerator;
 
 public class Maze {
@@ -50,10 +51,15 @@ public class Maze {
         // generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
 
         /* generate a maze using Wilson's algorithm */
-        WilsonsAlgorithmGenerator generator = new WilsonsAlgorithmGenerator(GRID_SIZE); 
-        generator.generateMaze();
-        walls = generator.generateMazeLines(CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
-        generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
+        // WilsonsAlgorithmGenerator generator = new WilsonsAlgorithmGenerator(GRID_SIZE); 
+        // generator.generateMaze();
+        // walls = generator.generateMazeLines(CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
+        // generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
+
+        /* generate a maze using Recursive Backtracking algorithm */
+        RecursiveBacktrackingAlgorithmGenerator rbGenerator = new RecursiveBacktrackingAlgorithmGenerator(GRID_SIZE);
+        rbGenerator.generateMaze(rbGenerator.getRandomNode());
+        walls = rbGenerator.drawMaze(canvas, 0);
         
         startCellCenter = new Point(
             cellWidth * 0.5,
