@@ -23,6 +23,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
     private boolean[][] west;
     private CanvasWindow canvas;
     private ArrayList <Line> lines;
+    // int repeated = 0;
     Node startNode;
 
     public RecursiveBacktrackingAlgorithmGenerator(int size){
@@ -56,6 +57,9 @@ public class RecursiveBacktrackingAlgorithmGenerator {
     }
 
     public void generateMaze(Node nodeStart){
+        if (nodeStart == null){
+            nodeStart = nodes.get(0);
+        }
         Collections.shuffle(directions); // randomizes directions for each node
         System.out.println(directions);
         Node nodeChecking = null;
@@ -196,7 +200,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
         
 
     private boolean insideBounds(int x, int y){
-        return (!(x <= 0 || x >= size || y < 0 || y >= size));
+        return (!(x < 0 || x >= size || y < 0 || y >= size));
     }
 
     /**
@@ -266,7 +270,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
             this.nodeB = nodeB;
         }
     }
-    private double scaleX(double x) { return canvas.getWidth()  * (x - 1) / (size-1); }
+    private double scaleX(double x) { return canvas.getWidth()  * (x) / (size); }
     private double scaleY(double y) { return canvas.getHeight() * ((size) - (y)) / (size) ; }
     
 }
