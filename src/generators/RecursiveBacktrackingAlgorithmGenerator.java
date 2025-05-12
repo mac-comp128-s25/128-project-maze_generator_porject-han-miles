@@ -78,6 +78,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                         System.out.println(nodeStart.x);
                         System.out.println("Y:");
                         System.out.println(nodeStart.y);
+                        nodeChecking.marked = true;
                         generateMaze(nodeChecking);
                     } 
                 }
@@ -94,6 +95,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                         System.out.println(nodeStart.x);
                         System.out.println("Y:");
                         System.out.println(nodeStart.y);
+                        nodeChecking.marked = true;
                         generateMaze(nodeChecking);
                     }
                 }
@@ -110,6 +112,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                         System.out.println(nodeStart.x);
                         System.out.println("Y:");
                         System.out.println(nodeStart.y);
+                        nodeChecking.marked = true;
                         generateMaze(nodeChecking);
                     }
                 }
@@ -126,6 +129,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                         System.out.println(nodeStart.x);
                         System.out.println("Y:");
                         System.out.println(nodeStart.y);
+                        nodeChecking.marked = true;
                         generateMaze(nodeChecking);
                     }
                 }
@@ -133,19 +137,26 @@ public class RecursiveBacktrackingAlgorithmGenerator {
         }
     }
 
-    public ArrayList<Line> drawMaze(CanvasWindow canvas, int nodeRadius){
+    public ArrayList<Line> drawMaze(CanvasWindow canvas){
         this.canvas = canvas;
 
         // Ellipse n = new Ellipse(scaleX(startNode.x - 0.55), scaleY(startNode.y - 0.45), 20, 20); // nodes
-        // n.setFillColor(Color.RED);
         // n.setFilled(true);
         // canvas.add(n);
+        checkForBoxes(); // makes sure rare instances of closed off boxes don't happen
+
+        north[size-1][size-1] = false;
+        south[1][1] = false;
+        
 
         for (int x = 0; x <= size; x++) {
             for (int y = 0; y <= size; y++) {
                 /* draw nodes */
-                // Ellipse s = new Ellipse(scaleX(x - 0.55), scaleY(y - 0.45), 10, 10);
-                //     s.setFillColor(Color.green);
+                // Ellipse s = new Ellipse(scaleX(x - 0.55), scaleY(y - 0.45), 20, 20);
+                //     s.setFillColor(Color.RED);
+                //     if (insideBounds(x, y)){
+                //         if (getNode(x, y).marked){ s.setFillColor(Color.green); }
+                //     }
                 //     s.setFilled(true);
                 //     canvas.add(s);
 
@@ -183,7 +194,10 @@ public class RecursiveBacktrackingAlgorithmGenerator {
                 }
             }
         }
+        
+        
         /* show path of nodes */
+
         // for (Edge edge : edges){
         //     double sX = scaleX(edge.nodeA.x + .5);
         // double sY = scaleY(edge.nodeA.y + .5);
@@ -195,7 +209,63 @@ public class RecursiveBacktrackingAlgorithmGenerator {
         // l.setStrokeWidth(5);
         // canvas.add(l);
         // }
+
+        north[size][size-1] = false;
+
         return lines;
+    }
+    /*
+     * handles very rare cases where  nodes will get marked while still being boxed off, making them not accesable
+     * cuts a random hole in the box
+     */
+    private void checkForBoxes(){
+        
+        for (int n = 0; n < size*size; n++){
+            Node cn = nodes.get(n);
+            if ((north[cn.x][cn.y]) && (south[cn.x][cn.y]) && (east[cn.x][cn.y]) && (west[cn.x][cn.y])){
+                System.out.println("box found!!");
+                System.out.println(cn.x);
+                System.out.println(cn.y);
+                Collections.shuffle(directions);
+                cn.marked = false;
+                System.out.println(directions);
+                for (int i = 0; i < directions.size(); i++){
+                    if (!cn.marked){
+                    if (directions.get(i) == "N"){
+                        if (insideBounds(cn.x, cn.y + 1)) {
+                            north[cn.x][cn.y] = false; 
+                            south[cn.x][cn.y + 1] = false;
+                            edges.add(new Edge(cn, getNode(cn.x, cn.y + 1)));
+                        }
+                    }
+                    else if (directions.get(i) == "S"){
+                        if (insideBounds(cn.x, cn.y - 1)) {
+                            north[cn.x][cn.y] = false; 
+                            south[cn.x][cn.y - 1] = false;
+                            edges.add(new Edge(cn, getNode(cn.x, cn.y - 1)));
+
+                        }
+                    }
+                    else if (directions.get(i) == "E"){
+                        if (insideBounds(cn.x + 1, cn.y)) {
+                            north[cn.x][cn.y] = false; 
+                            south[cn.x + 1][cn.y] = false;
+                            edges.add(new Edge(cn, getNode(cn.x + 1, cn.y)));
+
+                        }
+                    }
+                    else if (directions.get(i) == "W"){
+                        if (insideBounds(cn.x - 1, cn.y)) {
+                            north[cn.x][cn.y] = false; 
+                            south[cn.x - 1][cn.y] = false;
+                            edges.add(new Edge(cn, getNode(cn.x - 1, cn.y)));
+
+                        }
+                    }
+                    }
+                }
+            }
+        }
     }
         
 
@@ -218,7 +288,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
      * @return the node at the specified position
      */
     public Node getNode(int x, int y){
-        return nodes.get((x) + (size * (y)));
+        return nodes.get((x) + ((size) * (y)));
     }
 
     public Node getRandomNode(){
@@ -272,5 +342,7 @@ public class RecursiveBacktrackingAlgorithmGenerator {
     }
     private double scaleX(double x) { return canvas.getWidth()  * (x) / (size); }
     private double scaleY(double y) { return canvas.getHeight() * ((size) - (y)) / (size) ; }
+    // massive check for boxes, goes out of bonds
+    // ((north[cn.x][cn.y] || south[cn.x][cn.y+1]) && (south[cn.x][cn.y] || north[cn.x][cn.y-1]) && (east[cn.x][cn.y] || west[cn.x + 1][cn.y]) && (west[cn.x][cn.y] || east[cn.x - 1][cn.y]))
     
 }

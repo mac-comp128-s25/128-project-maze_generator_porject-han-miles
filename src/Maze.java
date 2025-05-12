@@ -57,9 +57,10 @@ public class Maze {
         // generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
 
         /* generate a maze using Recursive Backtracking algorithm */
+
         RecursiveBacktrackingAlgorithmGenerator rbGenerator = new RecursiveBacktrackingAlgorithmGenerator(GRID_SIZE);
         rbGenerator.generateMaze(rbGenerator.getRandomNode());
-        walls = rbGenerator.drawMaze(canvas, 0);
+        walls = rbGenerator.drawMaze(canvas);
         
         startCellCenter = new Point(
             cellWidth * 0.5,
