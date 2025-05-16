@@ -39,6 +39,7 @@ public class Maze {
     private double cellWidth = (double) CANVAS_WIDTH / GRID_SIZE;
     private double cellHeight = (double) CANVAS_HEIGHT / GRID_SIZE;
     private long messageRemoveTime = -1;
+    private ArrayList<Point> pastPos;
 
     
     public Maze(){
@@ -46,7 +47,7 @@ public class Maze {
         /* generate a maze using Prim's algorithm */
         // PrimsAlgorithmGenerator generator = new PrimsAlgorithmGenerator(GRID_SIZE); 
         // generator.generateMaze();
-        // // generator.addRandomEdges(0.20);
+        // generator.addRandomEdges(0.20);
         // walls = generator.generateMazeLines(CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
         // generator.drawMaze(canvas, walls, CANVAS_WIDTH, CANVAS_HEIGHT, WALL_THICKNESS);
 
@@ -77,6 +78,7 @@ public class Maze {
         messageText.setFont(FontStyle.BOLD, 20);
         messageText.setFillColor(Color.RED);
         messageText.setCenter(messageText.getCenter().getX(), messageText.getY());
+        pastPos = new ArrayList<Point>();
 
         startButton = new Button("Start Game");
         startButton.setCenter(CANVAS_WIDTH / 2.0, CANVAS_HEIGHT / 2.0);
@@ -187,6 +189,7 @@ public class Maze {
         Point currentCenter = player.getCenter();
         double nextX = currentCenter.getX() + playerDX;
         double nextY = currentCenter.getY() + playerDY;
+        pastPos.add(currentCenter);
 
         boolean collision = checkCollision(nextX, nextY);
 
@@ -264,6 +267,7 @@ public class Maze {
     showMessage(winMsg, Color.GREEN, 0);
 
     canvas.remove(player);
+    drawPlayerPath();
 }
 
 private void drawEndFlag() {
@@ -287,6 +291,16 @@ private void drawEndFlag() {
     flagBody.setFillColor(Color.RED);
     flagBody.setStroked(false); 
     canvas.add(flagBody);
+}
+
+private void drawPlayerPath(){
+    for (int p = 1; p < pastPos.size(); p++){
+        Line l = new Line(pastPos.get(p-1),pastPos.get(p));
+        l.setStroked(true);
+        l.setStrokeColor(Color.RED);
+        l.setStrokeWidth(5);
+        canvas.add(l);
+    }
 }
 
 
