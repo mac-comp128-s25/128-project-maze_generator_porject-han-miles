@@ -147,4 +147,14 @@ public class RecursiveBacktrackingAlgorithmTest {
         assertDoesNotThrow(() -> emptyGen.generateMazeLines(100, 100, 2));
     }
 
+    // simmilar to all nodes traveled but may find cases where the marked breaks
+    @Test
+    void allNodesMarked(){
+        generator.generateMaze(null);
+        List<Node> nodes = generator.getNodes();
+        for (Node node : nodes){
+            assertTrue(node.marked);
+        }
+    }
+
 }

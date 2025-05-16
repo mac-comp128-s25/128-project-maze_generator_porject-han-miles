@@ -189,7 +189,8 @@ public class Maze {
         Point currentCenter = player.getCenter();
         double nextX = currentCenter.getX() + playerDX;
         double nextY = currentCenter.getY() + playerDY;
-        // pastPos.add(currentCenter);
+
+        pastPos.add(currentCenter); // gathers points for path player takes in maze
 
         boolean collision = checkCollision(nextX, nextY);
 
@@ -292,7 +293,13 @@ private void drawEndFlag() {
     flagBody.setStroked(false); 
     canvas.add(flagBody);
 }
-
+/*
+ * draws a path the player takes to navagtate the maze
+ * uses points gathered during updates from pastPos array list
+ * 
+ * would consider a different data structure different from a list but project is 
+ * technically done and this was proven to be a quick 5 min project as previously thought
+ */
 private void drawPlayerPath(){
     for (int p = 1; p < pastPos.size(); p++){
             Line l = new Line(pastPos.get(p-1),pastPos.get(p));
