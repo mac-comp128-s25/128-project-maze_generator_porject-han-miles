@@ -189,7 +189,7 @@ public class Maze {
         Point currentCenter = player.getCenter();
         double nextX = currentCenter.getX() + playerDX;
         double nextY = currentCenter.getY() + playerDY;
-        pastPos.add(currentCenter);
+        // pastPos.add(currentCenter);
 
         boolean collision = checkCollision(nextX, nextY);
 
@@ -295,11 +295,11 @@ private void drawEndFlag() {
 
 private void drawPlayerPath(){
     for (int p = 1; p < pastPos.size(); p++){
-        Line l = new Line(pastPos.get(p-1),pastPos.get(p));
-        l.setStroked(true);
-        l.setStrokeColor(Color.RED);
-        l.setStrokeWidth(5);
-        canvas.add(l);
+            Line l = new Line(pastPos.get(p-1),pastPos.get(p));
+            l.setStroked(true);
+            l.setStrokeColor(Color.RED);
+            l.setStrokeWidth(5);
+            canvas.add(l);
     }
 }
 
